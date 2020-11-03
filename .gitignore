@@ -3,3 +3,6 @@ include
 lib
 pyvenv.cfg
 .vscode
+sample_object.json
+creds.txt
+
