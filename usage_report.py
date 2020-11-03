@@ -13,7 +13,7 @@ def get_space_memory_allocation(foundation: str, api_url: str, cf_token: str):
     header = {'Authorization': f'bearer {cf_token}'}
     for obj in sample_data:
         if obj['foundation'] == foundation:
-            space_guid, space_name, memory_used, memory_unused = obj['space_guid'], obj['space'], obj['memory_used_p'], obj['memory_unused_mb']
+            org, space_guid, space_name, memory_used, memory_unused = obj['org'], obj['space_guid'], obj['space'], obj['memory_used_p'], obj['memory_unused_mb']
             if '-DEV' in space_name or '-TST' in space_name:
                 existing_space = next((sp for sp in res if sp['space'] == space_name), None)
                 if existing_space is None:
@@ -27,11 +27,11 @@ def get_space_memory_allocation(foundation: str, api_url: str, cf_token: str):
                     total_memory = quota_response['apps']['total_memory_in_mb']
                     if memory_used == '':
                         if memory_unused != '': 
-                            res.append({'space': space_name, 'total_mem': total_memory, 'mem_used': 0.0, 'mem_unused': memory_unused})
+                            res.append({'org': org, 'space': space_name, 'total_mem': total_memory, 'mem_used': 0.0, 'mem_unused': memory_unused})
                         else: 
-                            res.append({'space': space_name, 'total_mem': total_memory, 'mem_used': 0.0, 'mem_unused': 0.0})
+                            res.append({'org': org, 'space': space_name, 'total_mem': total_memory, 'mem_used': 0.0, 'mem_unused': 0.0})
                     else:
-                        res.append({'space': space_name, 'total_mem': total_memory, 'mem_used': memory_used, 'mem_unused': memory_unused})
+                        res.append({'org': org, 'space': space_name, 'total_mem': total_memory, 'mem_used': memory_used, 'mem_unused': memory_unused})
                 else:
                     if memory_used != '' and memory_unused != '':
                         existing_space['mem_used'] += memory_used
